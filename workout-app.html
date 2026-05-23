@@ -37,9 +37,6 @@
   .topbar {
     padding: 18px 20px 10px;
     flex-shrink: 0;
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
   }
   .topbar-title {
     font-size: 28px;
@@ -211,10 +208,8 @@
 </head>
 <body>
 <div class="topbar">
-  <div>
-    <div class="topbar-title" id="dayTitle">CHEST DAY 1</div>
-    <div class="topbar-day" id="daySubtitle">Day 1 — Chest / Triceps (Strength)</div>
-  </div>
+  <div class="topbar-title" id="dayTitle">CHEST DAY 1</div>
+  <div class="topbar-day" id="daySubtitle">Day 1 — Chest / Triceps (Strength)</div>
 </div>
 <div class="progress-pill" id="progressPill">
   <div class="progress-row">
@@ -329,8 +324,29 @@ const DAYS = [
 ];
 
 const TAB_LABELS = ["Chest 1", "Back 1", "Legs", "Chest 2", "Back 2"];
+const STORAGE_KEY = "workout_state_v1";
 let currentDay = 0;
-let state = DAYS.map(d => d.rest ? [] : d.sections.map(s => s.exercises.map(() => false)));
+
+// Load state from localStorage or initialize fresh
+function loadState() {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      // Validate structure matches current DAYS
+      if (parsed.length === DAYS.length) return parsed;
+    }
+  } catch(e) {}
+  return DAYS.map(d => d.rest ? [] : d.sections.map(s => s.exercises.map(() => false)));
+}
+
+function saveState() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  } catch(e) {}
+}
+
+let state = loadState();
 
 function countDay(d) {
   if (DAYS[d].rest) return { done: 0, total: 0 };
@@ -344,8 +360,8 @@ function renderTabs() {
   tabs.innerHTML = '';
   TAB_LABELS.forEach((label, i) => {
     const { done, total } = countDay(i);
-    const btn = document.createElement('button');
     const isDone = done === total && total > 0;
+    const btn = document.createElement('button');
     btn.className = 'tab' + (i === currentDay ? ' active' : '') + (isDone && i !== currentDay ? ' done-tab' : '');
     btn.textContent = label + (isDone ? ' ✓' : '');
     btn.onclick = () => { currentDay = i; render(); };
@@ -400,8 +416,18 @@ function renderContent() {
 }
 
 function render() { renderTabs(); renderProgress(); renderContent(); }
-function toggle(si, ei) { state[currentDay][si][ei] = !state[currentDay][si][ei]; render(); }
-function resetDay() { state[currentDay] = DAYS[currentDay].sections.map(s => s.exercises.map(() => false)); render(); }
+
+function toggle(si, ei) {
+  state[currentDay][si][ei] = !state[currentDay][si][ei];
+  saveState();
+  render();
+}
+
+function resetDay() {
+  state[currentDay] = DAYS[currentDay].sections.map(s => s.exercises.map(() => false));
+  saveState();
+  render();
+}
 
 render();
 </script>
