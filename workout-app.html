@@ -566,12 +566,18 @@ function renderEx(){
   const dc=document.createElement('div');dc.className='ex-detail-card';
   dc.innerHTML=`<div class="ex-detail-stats"><div class="ex-detail-stat"><div class="ex-detail-val">${ex.sets}</div><div class="ex-detail-lbl">Sets</div></div><div class="ex-detail-stat"><div class="ex-detail-val">${ex.reps}</div><div class="ex-detail-lbl">Reps</div></div><div class="ex-detail-stat"><div class="ex-detail-val">${ex.rest}</div><div class="ex-detail-lbl">Rest</div></div></div><div class="ex-detail-type">${TYPE_LBL[ex.type]} · ${MULT[ex.type]||0.6}x LP multiplier</div>`;
   c.appendChild(dc);
-  if(pr){const pc=document.createElement('div');pc.className='ex-pr-card';pc.innerHTML=`<div class="ex-pr-title">PERSONAL RECORD</div><div class="ex-pr-val">${pr.weight}lb × ${pr.reps} reps</div><div class="ex-pr-sub">${pr.lp} LP earned</div>`;c.appendChild(pc);}
+  if(pr){const pc=document.createElement('div');pc.className='ex-pr-card';const prLine=ex.type==='cardio'?`${pr.mins} minutes`:`${pr.weight}lb × ${pr.reps} reps`;pc.innerHTML=`<div class="ex-pr-title">PERSONAL RECORD</div><div class="ex-pr-val">${prLine}</div><div class="ex-pr-sub">${pr.lp} LP earned</div>`;c.appendChild(pc);}
   if(!isDone){
     const lc=document.createElement('div');lc.className='log-card';
-    lc.innerHTML=`<div class="log-title">Log Best Set</div><div class="log-inputs"><div class="log-input-wrap"><div class="log-input-label">Weight (lbs)</div><input class="log-input" id="logW" type="number" inputmode="decimal" placeholder="0"/></div><div class="log-input-wrap"><div class="log-input-label">Reps</div><input class="log-input" id="logR" type="number" inputmode="decimal" placeholder="0"/></div></div><button class="log-btn" onclick="doLog()">Log & Complete ✓</button><div class="lp-preview" id="lpPrev">Enter weight & reps to preview LP</div>`;
-    c.appendChild(lc);
-    setTimeout(()=>{const wi=document.getElementById('logW'),ri=document.getElementById('logR');if(wi&&ri){const u=()=>{const w=parseFloat(wi.value)||0,r=parseFloat(ri.value)||0;if(w>0&&r>0)document.getElementById('lpPrev').textContent='≈ +'+calcLp(w,r,ex.sets,ex.type)+' LP';};wi.addEventListener('input',u);ri.addEventListener('input',u);}},50);
+    if(ex.type==='cardio'){
+      lc.innerHTML=`<div class="log-title">Log Cardio</div><div class="log-inputs"><div class="log-input-wrap"><div class="log-input-label">Minutes</div><input class="log-input" id="logW" type="number" inputmode="decimal" placeholder="20"/></div></div><button class="log-btn" onclick="doLog()">Log & Complete ✓</button><div class="lp-preview" id="lpPrev">Enter minutes to preview LP</div>`;
+      c.appendChild(lc);
+      setTimeout(()=>{const wi=document.getElementById('logW');if(wi){wi.addEventListener('input',()=>{const mins=parseFloat(wi.value)||0;if(mins>0){const lp=Math.round(mins*0.1*10)/10;document.getElementById('lpPrev').textContent='≈ +'+lp+' LP';}});}},50);
+    } else {
+      lc.innerHTML=`<div class="log-title">Log Best Set</div><div class="log-inputs"><div class="log-input-wrap"><div class="log-input-label">Weight (lbs)</div><input class="log-input" id="logW" type="number" inputmode="decimal" placeholder="0"/></div><div class="log-input-wrap"><div class="log-input-label">Reps</div><input class="log-input" id="logR" type="number" inputmode="decimal" placeholder="0"/></div></div><button class="log-btn" onclick="doLog()">Log & Complete ✓</button><div class="lp-preview" id="lpPrev">Enter weight & reps to preview LP</div>`;
+      c.appendChild(lc);
+      setTimeout(()=>{const wi=document.getElementById('logW'),ri=document.getElementById('logR');if(wi&&ri){const u=()=>{const w=parseFloat(wi.value)||0,r=parseFloat(ri.value)||0;if(w>0&&r>0)document.getElementById('lpPrev').textContent='≈ +'+calcLp(w,r,ex.sets,ex.type)+' LP';};wi.addEventListener('input',u);ri.addEventListener('input',u);}},50);
+    }
     const cb=document.createElement('button');cb.className='complete-btn';cb.textContent='Mark Complete (no LP)';cb.onclick=()=>markComplete();c.appendChild(cb);
   } else {
     const cb=document.createElement('button');cb.className='complete-btn already-done';cb.textContent='✓ Completed';c.appendChild(cb);
@@ -586,15 +592,26 @@ function undoExFromExScreen(){
 function doLog(){
   const{di,si,ei}=curEx;
   const ex=S.days[di].sections[si].exercises[ei];
-  const w=parseFloat(document.getElementById('logW').value)||0;
-  const r=parseFloat(document.getElementById('logR').value)||0;
-  if(w<=0||r<=0){alert('Enter weight and reps.');return;}
-  const lp=calcLp(w,r,ex.sets,ex.type);
-  const old=S.prs[ex.id];
-  if(!old||lp>old.lp)S.prs[ex.id]={weight:w,reps:r,lp};
+  let lp,logEntry;
+  if(ex.type==='cardio'){
+    const mins=parseFloat(document.getElementById('logW').value)||0;
+    if(mins<=0){alert('Enter minutes.');return;}
+    lp=Math.round(mins*0.1*10)/10;
+    logEntry={mins,lp};
+    const oldPr=S.prs[ex.id];
+    if(!oldPr||mins>(oldPr.mins||0))S.prs[ex.id]={mins,lp,weight:mins,reps:1};
+  } else {
+    const w=parseFloat(document.getElementById('logW').value)||0;
+    const r=parseFloat(document.getElementById('logR').value)||0;
+    if(w<=0||r<=0){alert('Enter weight and reps.');return;}
+    lp=calcLp(w,r,ex.sets,ex.type);
+    logEntry={weight:w,reps:r,lp};
+    const oldPr=S.prs[ex.id];
+    if(!oldPr||lp>oldPr.lp)S.prs[ex.id]={weight:w,reps:r,lp};
+  }
   getChecked(viewingWeek)[ex.id]=true;
   if(!S.weekLp[viewingWeek])S.weekLp[viewingWeek]={};
-  S.weekLp[viewingWeek][ex.id]={weight:w,reps:r,lp};
+  S.weekLp[viewingWeek][ex.id]=logEntry;
   updateStreak();awardLp(lp);save();
   checkWeekAnim(viewingWeek);
   renderEx();renderDay();
