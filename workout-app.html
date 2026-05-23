@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Workout">
+<meta name="theme-color" content="#080808">
+<title>Workout</title>
+<style>
+  :root {
+    --bg: #080808;
+    --surface: #111;
+    --surface2: #181818;
+    --border: #222;
+    --text: #f0f0f0;
+    --muted: #555;
+    --muted2: #333;
+    --green: #39e075;
+    --green-dim: #0d2a1a;
+    --green-border: #174d2e;
+    --orange: #ff7c2a;
+    --purple: #7c6fff;
+    --gold: #f5c542;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; overflow: hidden; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    height: 100dvh;
+  }
+  .topbar {
+    padding: 18px 20px 10px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+  .topbar-title {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    line-height: 1;
+    color: var(--text);
+    text-transform: uppercase;
+  }
+  .topbar-day {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--muted);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+  .progress-pill {
+    margin: 0 20px 14px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 12px 16px;
+    flex-shrink: 0;
+  }
+  .progress-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  .progress-label { font-size: 12px; color: var(--muted); font-weight: 500; }
+  .progress-frac { font-size: 13px; font-weight: 700; color: var(--green); font-variant-numeric: tabular-nums; }
+  .bar-track { background: var(--border); border-radius: 99px; height: 5px; }
+  .bar-fill { height: 100%; background: var(--green); border-radius: 99px; transition: width 0.35s ease; width: 0%; }
+  .tabs-wrap {
+    padding: 0 20px 14px;
+    flex-shrink: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .tabs-wrap::-webkit-scrollbar { display: none; }
+  .tabs { display: flex; gap: 8px; width: max-content; }
+  .tab {
+    padding: 8px 16px;
+    border-radius: 99px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--muted);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.18s ease;
+    font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif;
+  }
+  .tab.active { background: var(--green); border-color: var(--green); color: #000; }
+  .tab.done-tab { border-color: var(--green-border); color: var(--green); }
+  .scroll {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 20px 100px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .scroll::-webkit-scrollbar { display: none; }
+  .section-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted2);
+    margin: 20px 0 8px;
+  }
+  .exercise {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 14px 16px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s, transform 0.1s;
+    user-select: none;
+  }
+  .exercise:active { transform: scale(0.975); }
+  .exercise.done { background: var(--green-dim); border-color: var(--green-border); }
+  .circle {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    border: 2px solid var(--muted2);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    transition: background 0.2s, border-color 0.2s;
+    font-size: 13px;
+    font-weight: 700;
+    color: transparent;
+  }
+  .exercise.done .circle { background: var(--green); border-color: var(--green); color: #000; }
+  .ex-info { flex: 1; min-width: 0; }
+  .ex-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 4px;
+    transition: color 0.2s;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .exercise.done .ex-name { color: var(--muted); text-decoration: line-through; }
+  .ex-meta { font-size: 11px; color: var(--muted); display: flex; gap: 10px; flex-wrap: wrap; }
+  .exercise.done .ex-meta { color: var(--muted2); }
+  .badge {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 99px;
+    flex-shrink: 0;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+  .b-compound { background: #16163a; color: var(--purple); }
+  .b-isolation { background: #1a1a1a; color: #666; }
+  .b-cardio { background: #2a1500; color: var(--orange); }
+  .b-abs { background: #1a1200; color: var(--gold); }
+  .complete-banner {
+    display: none;
+    background: var(--green-dim);
+    border: 1px solid var(--green-border);
+    border-radius: 14px;
+    padding: 18px;
+    text-align: center;
+    margin-top: 16px;
+  }
+  .complete-banner.show { display: block; }
+  .complete-banner .emoji { font-size: 28px; margin-bottom: 6px; }
+  .complete-banner p { font-size: 20px; font-weight: 800; letter-spacing: 1px; color: var(--green); text-transform: uppercase; }
+  .complete-banner small { font-size: 12px; color: var(--muted); }
+  .reset-btn {
+    width: 100%;
+    margin-top: 16px;
+    padding: 13px;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif;
+    transition: all 0.2s;
+  }
+  .reset-btn:active { background: var(--surface2); }
+  .rest-day {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    text-align: center;
+    gap: 12px;
+  }
+  .rest-day .big { font-size: 44px; font-weight: 800; letter-spacing: 2px; color: var(--muted2); text-transform: uppercase; }
+  .rest-day p { font-size: 14px; color: var(--muted); max-width: 240px; line-height: 1.6; }
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div>
+    <div class="topbar-title" id="dayTitle">CHEST DAY 1</div>
+    <div class="topbar-day" id="daySubtitle">Day 1 — Chest / Triceps (Strength)</div>
+  </div>
+</div>
+<div class="progress-pill" id="progressPill">
+  <div class="progress-row">
+    <span class="progress-label">Progress</span>
+    <span class="progress-frac" id="fracText">0 / 0</span>
+  </div>
+  <div class="bar-track"><div class="bar-fill" id="barFill"></div></div>
+</div>
+<div class="tabs-wrap">
+  <div class="tabs" id="tabs"></div>
+</div>
+<div class="scroll" id="scroll"></div>
+
+<script>
+const DAYS = [
+  {
+    id: 0, title: "CHEST DAY 1", subtitle: "Day 1 — Chest / Triceps (Strength)", rest: false,
+    sections: [
+      { label: "Chest", exercises: [
+        { name: "Flat Dumbbell Press", sets: "4 sets", reps: "6–10 reps", rest: "3 min rest", b: "b-compound", badge: "Compound" },
+        { name: "Smith Machine Incline Press", sets: "4 sets", reps: "8–12 reps", rest: "2–3 min rest", b: "b-compound", badge: "Compound" },
+        { name: "Pec Deck", sets: "3 sets", reps: "12–15 reps", rest: "60–90 sec rest", b: "b-isolation", badge: "Isolation" },
+      ]},
+      { label: "Shoulders", exercises: [
+        { name: "Lateral Raises", sets: "3 sets", reps: "12–20 reps", rest: "60 sec rest", b: "b-isolation", badge: "Isolation" },
+      ]},
+      { label: "Triceps", exercises: [
+        { name: "Smith Close-Grip Bench", sets: "3 sets", reps: "8–10 reps", rest: "2 min rest", b: "b-compound", badge: "Compound" },
+        { name: "Straight Bar Tricep Pushdown", sets: "3 sets", reps: "10–15 reps", rest: "60 sec rest", b: "b-isolation", badge: "Isolation" },
+      ]},
+      { label: "Cardio", exercises: [
+        { name: "Incline Treadmill Walk", sets: "10–12% incline", reps: "3.0–3.5 mph", rest: "20–30 min", b: "b-cardio", badge: "Cardio" },
+      ]},
+    ]
+  },
+  {
+    id: 1, title: "BACK DAY 1", subtitle: "Day 2 — Back / Biceps (Width)", rest: false,
+    sections: [
+      { label: "Back", exercises: [
+        { name: "Lat Pulldown (MAG grip)", sets: "4 sets", reps: "8–12 reps", rest: "2–3 min rest", b: "b-compound", badge: "Compound" },
+        { name: "Seated Cable Row", sets: "4 sets", reps: "10–12 reps", rest: "2 min rest", b: "b-compound", badge: "Compound" },
+        { name: "Chest-Supported DB Row", sets: "3 sets", reps: "10–12 reps", rest: "90 sec rest", b: "b-compound", badge: "Compound" },
+      ]},
+      { label: "Biceps", exercises: [
+        { name: "Incline Dumbbell Curl", sets: "3 sets", reps: "10–15 reps", rest: "60 sec rest", b: "b-isolation", badge: "Isolation" },
+        { name: "Preacher Curl Machine", sets: "3 sets", reps: "10–12 reps", rest: "60 sec rest", b: "b-isolation", badge: "Isolation" },
+      ]},
+      { label: "Cardio", exercises: [
+        { name: "Incline Treadmill Walk", sets: "10–12% incline", reps: "3.0–3.5 mph", rest: "20–30 min", b: "b-cardio", badge: "Cardio" },
+      ]},
+    ]
+  },
+  {
+    id: 2, title: "LEG DAY", subtitle: "Day 3 — Legs / Abs", rest: false,
+    sections: [
+      { label: "Quads & Glutes", exercises: [
+        { name: "Smith Machine Squat", sets: "4 sets", reps: "6–10 reps", rest: "3 min rest", b: "b-compound", badge: "Compound" },
+        { name: "Leg Press", sets: "4 sets", reps: "10–15 reps", rest: "2–3 min rest", b: "b-compound", badge: "Compound" },
+        { name: "Leg Extension", sets: "3 sets", reps: "12–15 reps", rest: "60–90 sec rest", b: "b-isolation", badge: "Isolation" },
+      ]},
+      { label: "Hamstrings", exercises: [
+        { name: "Dumbbell RDL", sets: "4 sets", reps: "10–12 reps", rest: "2 min rest", b: "b-compound", badge: "Compound" },
+        { name: "Leg Curl Machine", sets: "3 sets", reps: "10–15 reps", rest: "60–90 sec rest", b: "b-isolation", badge: "Isolation" },
+      ]},
+      { label: "Calves", exercises: [
+        { name: "Calf Raise", sets: "4 sets", reps: "12–20 reps", rest: "60 sec rest", b: "b-isolation", badge: "Isolation" },
+      ]},
+      { label: "Abs", exercises: [
+        { name: "Captain's Chair Leg Raise", sets: "3 sets", reps: "12–15 reps", rest: "60 sec rest", b: "b-abs", badge: "Abs" },
+        { name: "Decline Crunch", sets: "3 sets", reps: "15–20 reps", rest: "45 sec rest", b: "b-abs", badge: "Abs" },
+      ]},
+    ]
+  },
+  {
+    id: 3, title: "CHEST DAY 2", subtitle: "Day 4 — Chest / Triceps (Hypertrophy)", rest: false,
+    sections: [
+      { label: "Chest", exercises: [
+        { name: "Smith Machine Incline Press", sets: "4 sets", reps: "8–12 reps", rest: "2–3 min rest", b: "b-compound", badge: "Compound" },
+        { name: "Flat Dumbbell Press", sets: "4 sets", reps: "10–15 reps", rest: "2 min rest", b: "b-compound", badge: "Compound" },
+        { name: "Pec Deck", sets: "3 sets", reps: "12–15 reps", rest: "60–90 sec rest", b: "b-isolation", badge: "Isolation" },
+      ]},
+      { label: "Shoulders", exercises: [
+        { name: "Lateral Raises", sets: "3 sets", reps: "12–20 reps", rest: "60 sec rest", b: "b-isolation", badge: "Isolation" },
+      ]},
+      { label: "Triceps", exercises: [
+        { name: "Dumbbell Skullcrusher", sets: "3 sets", reps: "10–12 reps", rest: "90 sec rest", b: "b-isolation", badge: "Isolation" },
+        { name: "Straight Bar Tricep Pushdown", sets: "3 sets", reps: "12–15 reps", rest: "60 sec rest", b: "b-isolation", badge: "Isolation" },
+      ]},
+      { label: "Cardio", exercises: [
+        { name: "Incline Treadmill Walk", sets: "10–12% incline", reps: "3.0–3.5 mph", rest: "20 min", b: "b-cardio", badge: "Cardio" },
+      ]},
+    ]
+  },
+  {
+    id: 4, title: "BACK DAY 2", subtitle: "Day 5 — Back / Biceps (Thickness)", rest: false,
+    sections: [
+      { label: "Back", exercises: [
+        { name: "Heavy Single-Arm DB Row", sets: "4 sets", reps: "8–10 reps", rest: "2–3 min rest", b: "b-compound", badge: "Compound" },
+        { name: "Seated Cable Row (wide/V-bar)", sets: "4 sets", reps: "10–12 reps", rest: "2 min rest", b: "b-compound", badge: "Compound" },
+        { name: "Lat Pulldown (underhand/neutral)", sets: "3 sets", reps: "10–12 reps", rest: "90 sec rest", b: "b-compound", badge: "Compound" },
+        { name: "Face Pulls", sets: "3 sets", reps: "15–20 reps", rest: "60 sec rest", b: "b-isolation", badge: "Isolation" },
+      ]},
+      { label: "Biceps", exercises: [
+        { name: "Dumbbell Curl", sets: "3 sets", reps: "8–12 reps", rest: "60 sec rest", b: "b-isolation", badge: "Isolation" },
+        { name: "Hammer Curl", sets: "3 sets", reps: "12–15 reps", rest: "60 sec rest", b: "b-isolation", badge: "Isolation" },
+      ]},
+      { label: "Cardio", exercises: [
+        { name: "Incline Treadmill Walk", sets: "10–12% incline", reps: "3.0–3.5 mph", rest: "20 min", b: "b-cardio", badge: "Cardio" },
+      ]},
+    ]
+  },
+];
+
+const TAB_LABELS = ["Chest 1", "Back 1", "Legs", "Chest 2", "Back 2"];
+let currentDay = 0;
+let state = DAYS.map(d => d.rest ? [] : d.sections.map(s => s.exercises.map(() => false)));
+
+function countDay(d) {
+  if (DAYS[d].rest) return { done: 0, total: 0 };
+  let done = 0, total = 0;
+  DAYS[d].sections.forEach((s, si) => s.exercises.forEach((_, ei) => { total++; if (state[d][si][ei]) done++; }));
+  return { done, total };
+}
+
+function renderTabs() {
+  const tabs = document.getElementById('tabs');
+  tabs.innerHTML = '';
+  TAB_LABELS.forEach((label, i) => {
+    const { done, total } = countDay(i);
+    const btn = document.createElement('button');
+    const isDone = done === total && total > 0;
+    btn.className = 'tab' + (i === currentDay ? ' active' : '') + (isDone && i !== currentDay ? ' done-tab' : '');
+    btn.textContent = label + (isDone ? ' ✓' : '');
+    btn.onclick = () => { currentDay = i; render(); };
+    tabs.appendChild(btn);
+  });
+}
+
+function renderProgress() {
+  const { done, total } = countDay(currentDay);
+  const pill = document.getElementById('progressPill');
+  if (DAYS[currentDay].rest || total === 0) { pill.style.display = 'none'; return; }
+  pill.style.display = 'block';
+  document.getElementById('fracText').textContent = done + ' / ' + total;
+  document.getElementById('barFill').style.width = (done / total * 100) + '%';
+}
+
+function renderContent() {
+  const scroll = document.getElementById('scroll');
+  const day = DAYS[currentDay];
+  document.getElementById('dayTitle').textContent = day.title;
+  document.getElementById('daySubtitle').textContent = day.subtitle;
+
+  if (day.rest) {
+    scroll.innerHTML = '<div class="rest-day"><div class="big">REST DAY</div><p>Sleep. Eat protein. Let the muscles grow. You earned it.</p></div>';
+    return;
+  }
+
+  let html = '';
+  day.sections.forEach((section, si) => {
+    html += '<div class="section-label">' + section.label + '</div>';
+    section.exercises.forEach((ex, ei) => {
+      const done = state[currentDay][si][ei];
+      html += '<div class="exercise' + (done ? ' done' : '') + '" onclick="toggle(' + si + ',' + ei + ')">' +
+        '<div class="circle">' + (done ? '✓' : '') + '</div>' +
+        '<div class="ex-info">' +
+          '<div class="ex-name">' + ex.name + '</div>' +
+          '<div class="ex-meta"><span>' + ex.sets + '</span><span>' + ex.reps + '</span><span>' + ex.rest + '</span></div>' +
+        '</div>' +
+        '<div class="badge ' + ex.b + '">' + ex.badge + '</div>' +
+        '</div>';
+    });
+  });
+
+  const { done, total } = countDay(currentDay);
+  html += '<div class="complete-banner' + (done === total ? ' show' : '') + '">' +
+    '<div class="emoji">🔥</div>' +
+    '<p>' + day.title + ' DONE</p>' +
+    '<small>Go eat protein. Rest up.</small>' +
+    '</div>';
+  html += '<button class="reset-btn" onclick="resetDay()">Reset Day</button>';
+  scroll.innerHTML = html;
+}
+
+function render() { renderTabs(); renderProgress(); renderContent(); }
+function toggle(si, ei) { state[currentDay][si][ei] = !state[currentDay][si][ei]; render(); }
+function resetDay() { state[currentDay] = DAYS[currentDay].sections.map(s => s.exercises.map(() => false)); render(); }
+
+render();
+</script>
+</body>
+</html>
