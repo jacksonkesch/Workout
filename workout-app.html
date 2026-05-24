@@ -373,32 +373,85 @@ TIERS.forEach((t,ti)=>{if(t.name==='Elite'){RANK_LIST.push({tier:ti,div:0,name:'
 const START_RANK=0;
 const DEFAULT_DAYS=[
   {id:0,title:'CHEST DAY 1',subtitle:'Day 1 — Chest / Triceps (Strength)',sections:[
-    {label:'Chest',exercises:[{id:'c1e1',name:'Flat Dumbbell Press',sets:4,reps:'6–10',rest:'3 min',type:'compound_heavy'},{id:'c1e2',name:'Smith Machine Incline Press',sets:4,reps:'8–12',rest:'2–3 min',type:'compound_heavy'},{id:'c1e3',name:'Pec Deck',sets:3,reps:'12–15',rest:'60–90 sec',type:'isolation'}]},
-    {label:'Shoulders',exercises:[{id:'c1e4',name:'Lateral Raises',sets:3,reps:'12–20',rest:'60 sec',type:'isolation'}]},
-    {label:'Triceps',exercises:[{id:'c1e5',name:'Smith Close-Grip Bench',sets:3,reps:'8–10',rest:'2 min',type:'compound_moderate'},{id:'c1e6',name:'Straight Bar Tricep Pushdown',sets:3,reps:'10–15',rest:'60 sec',type:'isolation'}]},
-    {label:'Cardio',exercises:[{id:'c1e7',name:'Incline Treadmill Walk',sets:1,reps:'20–30 min',rest:'—',type:'cardio'}]},
+    {label:'Chest',exercises:[
+      {id:'c1e1',name:'Flat Dumbbell Press',sets:4,reps:'6–10',rest:'3 min',type:'compound_heavy',targets:'Primary mover for overall chest mass. Dumbbells allow greater range of motion than barbell, maximizing pec fiber recruitment. Hits the sternocostal head (middle/lower chest). Go heavy — this is your strength anchor.'},
+      {id:'c1e2',name:'Smith Machine Incline Press',sets:4,reps:'8–12',rest:'2–3 min',type:'compound_heavy',targets:'Targets the clavicular head (upper chest). EMG studies show 15–30° incline maximizes upper pec activation without shoulders taking over. Smith machine lets you safely go heavy solo.'},
+      {id:'c1e3',name:'Pec Deck',sets:3,reps:'12–15',rest:'60–90 sec',type:'isolation',targets:'Highest EMG chest activation of any machine exercise. Isolates the pecs completely by removing tricep and delt involvement. Focuses on the stretch and squeeze — key for hypertrophy.'},
+    ]},
+    {label:'Shoulders',exercises:[
+      {id:'c1e4',name:'Lateral Raises',sets:3,reps:'12–20',rest:'60 sec',type:'isolation',targets:'Targets the lateral deltoid head — the only exercise that directly builds shoulder width. Essential for the capped shoulder look and V-taper at your height.'},
+    ]},
+    {label:'Triceps',exercises:[
+      {id:'c1e5',name:'Smith Close-Grip Bench',sets:3,reps:'8–10',rest:'2 min',type:'compound_moderate',targets:'Best compound tricep movement. Hits all three tricep heads with emphasis on the long head. Lets you load heavy while chest is already warmed up. Builds the foundational thickness of the arm.'},
+      {id:'c1e6',name:'Straight Bar Tricep Pushdown',sets:3,reps:'10–15',rest:'60 sec',type:'isolation',targets:'EMG research confirms this is the top exercise for the lateral head of the tricep — the outer horseshoe shape. Overhand grip is optimal. Keep elbows locked at your sides.'},
+    ]},
+    {label:'Cardio',exercises:[
+      {id:'c1e7',name:'Incline Treadmill Walk',sets:1,reps:'20–30 min',rest:'—',type:'cardio',targets:'Low intensity steady state cardio. Burns fat without competing with muscle recovery. 10–12% incline at 3.0–3.5 mph. Keeps you lean while building muscle.'},
+    ]},
   ]},
   {id:1,title:'BACK DAY 1',subtitle:'Day 2 — Back / Biceps (Width)',sections:[
-    {label:'Back',exercises:[{id:'b1e1',name:'Lat Pulldown (MAG grip)',sets:4,reps:'8–12',rest:'2–3 min',type:'compound_moderate'},{id:'b1e2',name:'Seated Cable Row',sets:4,reps:'10–12',rest:'2 min',type:'compound_moderate'},{id:'b1e3',name:'Chest-Supported DB Row',sets:3,reps:'10–12',rest:'90 sec',type:'compound_moderate'}]},
-    {label:'Biceps',exercises:[{id:'b1e4',name:'Incline Dumbbell Curl',sets:3,reps:'10–15',rest:'60 sec',type:'isolation'},{id:'b1e5',name:'Preacher Curl Machine',sets:3,reps:'10–12',rest:'60 sec',type:'isolation'}]},
-    {label:'Cardio',exercises:[{id:'b1e6',name:'Incline Treadmill Walk',sets:1,reps:'20–30 min',rest:'—',type:'cardio'}]},
+    {label:'Back',exercises:[
+      {id:'b1e1',name:'Lat Pulldown (MAG grip)',sets:4,reps:'8–12',rest:'2–3 min',type:'compound_moderate',targets:'Best vertical pull for lat width. MAG (neutral) grip lets your biceps stay strong so your lats get fully fatigued. Pull to your chest with a slight lean back. Builds the V-taper.'},
+      {id:'b1e2',name:'Seated Cable Row',sets:4,reps:'10–12',rest:'2 min',type:'compound_moderate',targets:'Top horizontal pull for mid-back thickness. Drives scapular retraction which builds the dense upper back look. Squeeze your shoulder blades together at peak contraction.'},
+      {id:'b1e3',name:'Single-Arm Dumbbell Row',sets:3,reps:'10–12',rest:'90 sec',type:'compound_moderate',targets:'91% EMG activation — one of the highest of any back exercise. Hits both lats and mid-back. Going unilateral removes lower back as a limiting factor. Go heavy, full stretch at the bottom.'},
+    ]},
+    {label:'Biceps',exercises:[
+      {id:'b1e4',name:'Incline Dumbbell Curl',sets:3,reps:'10–15',rest:'60 sec',type:'isolation',targets:'Loads the long head of the bicep in a fully stretched position at the bottom — research confirms stretched-position training drives more hypertrophy. Best exercise for building bicep peak.'},
+      {id:'b1e5',name:'Preacher Curl Machine',sets:3,reps:'10–12',rest:'60 sec',type:'isolation',targets:'Locks out momentum completely and isolates the short head. The pad prevents cheating and forces the bicep to do all the work. Complements the incline curl by hitting a different region.'},
+    ]},
+    {label:'Cardio',exercises:[
+      {id:'b1e6',name:'Incline Treadmill Walk',sets:1,reps:'20–30 min',rest:'—',type:'cardio',targets:'Low intensity steady state cardio. Burns fat without competing with muscle recovery. 10–12% incline at 3.0–3.5 mph. Keeps you lean while building muscle.'},
+    ]},
   ]},
   {id:2,title:'LEG DAY',subtitle:'Day 3 — Legs / Abs',sections:[
-    {label:'Quads & Glutes',exercises:[{id:'l1e1',name:'Smith Machine Squat',sets:4,reps:'6–10',rest:'3 min',type:'compound_heavy'},{id:'l1e2',name:'Leg Press',sets:4,reps:'10–15',rest:'2–3 min',type:'compound_heavy'},{id:'l1e3',name:'Leg Extension',sets:3,reps:'12–15',rest:'60–90 sec',type:'isolation'}]},
-    {label:'Hamstrings',exercises:[{id:'l1e4',name:'Dumbbell RDL',sets:4,reps:'10–12',rest:'2 min',type:'compound_heavy'},{id:'l1e5',name:'Leg Curl Machine',sets:3,reps:'10–15',rest:'60–90 sec',type:'isolation'}]},
-    {label:'Calves',exercises:[{id:'l1e6',name:'Calf Raise',sets:4,reps:'12–20',rest:'60 sec',type:'isolation'}]},
-    {label:'Abs',exercises:[{id:'l1e7',name:"Captain's Chair Leg Raise",sets:3,reps:'12–15',rest:'60 sec',type:'abs'},{id:'l1e8',name:'Decline Crunch',sets:3,reps:'15–20',rest:'45 sec',type:'abs'}]},
+    {label:'Quads & Glutes',exercises:[
+      {id:'l1e1',name:'Smith Machine Squat',sets:4,reps:'6–10',rest:'3 min',type:'compound_heavy',targets:'King of quad and glute development. Hits quads, glutes, and hamstrings simultaneously. Full depth is critical — research shows full ROM produces 2x more muscle growth than partial squats. Smith removes balance concern so you can focus on depth.'},
+      {id:'l1e2',name:'Leg Press',sets:4,reps:'10–15',rest:'2–3 min',type:'compound_heavy',targets:'Adds quad volume after squats without the spinal load. Feet low on platform = more quad emphasis. Feet high = more glute and hamstring. One of the best mass builders for the legs.'},
+      {id:'l1e3',name:'Leg Extension',sets:3,reps:'12–15',rest:'60–90 sec',type:'isolation',targets:'Only exercise that isolates the quads with no glute or hamstring involvement. Best for building the teardrop shape (VMO) above the knee. Do this after heavy compounds while quads are fully warmed up.'},
+    ]},
+    {label:'Hamstrings',exercises:[
+      {id:'l1e4',name:'Dumbbell RDL',sets:4,reps:'10–12',rest:'2 min',type:'compound_heavy',targets:'Best hamstring exercise for size. Loads the hamstring in the stretched position (hip hinge) which research confirms drives the most hypertrophy. Also hits glutes heavily. Feel the stretch in the hamstring at the bottom of each rep.'},
+      {id:'l1e5',name:'Leg Curl Machine',sets:3,reps:'10–15',rest:'60–90 sec',type:'isolation',targets:'Isolates the hamstring through knee flexion. Complements the RDL which works the hamstring through hip extension. Together these two movements hit the full hamstring from both ends.'},
+    ]},
+    {label:'Calves',exercises:[
+      {id:'l1e6',name:'Calf Raise',sets:4,reps:'12–20',rest:'60 sec',type:'isolation',targets:'Targets the gastrocnemius (upper calf). Calves respond best to high reps and full range of motion — full stretch at the bottom is essential. Go slow, pause at the bottom, explode up.'},
+    ]},
+    {label:'Abs',exercises:[
+      {id:'l1e7',name:"Captain's Chair Leg Raise",sets:3,reps:'12–15',rest:'60 sec',type:'abs',targets:'Best lower ab exercise. Loads the abs through a full range of motion with bodyweight resistance. Keep the movement controlled — no swinging. Tuck the pelvis at the top for maximum contraction.'},
+      {id:'l1e8',name:'Decline Crunch',sets:3,reps:'15–20',rest:'45 sec',type:'abs',targets:'Hits the upper and mid abs. The decline angle increases the range of motion compared to flat crunches, creating more tension on the rectus abdominis. Do not pull your neck — cross arms on chest.'},
+    ]},
   ]},
   {id:3,title:'CHEST DAY 2',subtitle:'Day 4 — Chest / Triceps (Hypertrophy)',sections:[
-    {label:'Chest',exercises:[{id:'c2e1',name:'Smith Machine Incline Press',sets:4,reps:'8–12',rest:'2–3 min',type:'compound_heavy'},{id:'c2e2',name:'Flat Dumbbell Press',sets:4,reps:'10–15',rest:'2 min',type:'compound_heavy'},{id:'c2e3',name:'Pec Deck',sets:3,reps:'12–15',rest:'60–90 sec',type:'isolation'}]},
-    {label:'Shoulders',exercises:[{id:'c2e4',name:'Lateral Raises',sets:3,reps:'12–20',rest:'60 sec',type:'isolation'}]},
-    {label:'Triceps',exercises:[{id:'c2e5',name:'Dumbbell Skullcrusher',sets:3,reps:'10–12',rest:'90 sec',type:'isolation'},{id:'c2e6',name:'Straight Bar Tricep Pushdown',sets:3,reps:'12–15',rest:'60 sec',type:'isolation'}]},
-    {label:'Cardio',exercises:[{id:'c2e7',name:'Incline Treadmill Walk',sets:1,reps:'20 min',rest:'—',type:'cardio'}]},
+    {label:'Chest',exercises:[
+      {id:'c2e1',name:'Smith Machine Incline Press',sets:4,reps:'8–12',rest:'2–3 min',type:'compound_heavy',targets:'Leads Day 4 with upper chest focus since flat led Day 1. Hitting upper chest first when fresh maximizes clavicular head development — the part that makes your chest look full in a shirt.'},
+      {id:'c2e2',name:'Flat Dumbbell Press',sets:4,reps:'10–15',rest:'2 min',type:'compound_heavy',targets:'Higher rep range than Day 1 for more hypertrophy stimulus. More time under tension at the same movement. Focus on the squeeze at the top and a controlled lower — not just moving weight.'},
+      {id:'c2e3',name:'Pec Deck',sets:3,reps:'12–15',rest:'60–90 sec',type:'isolation',targets:'Isolation finisher to fully exhaust the pecs. At this point in the session your chest is pre-fatigued — the pec deck isolates it completely so no other muscle can compensate.'},
+    ]},
+    {label:'Shoulders',exercises:[
+      {id:'c2e4',name:'Lateral Raises',sets:3,reps:'12–20',rest:'60 sec',type:'isolation',targets:'Second weekly lateral delt session. Frequency matters — hitting lateral raises twice a week is what builds the wide capped shoulder look over time. Light enough to do with good form through the full range.'},
+    ]},
+    {label:'Triceps',exercises:[
+      {id:'c2e5',name:'DB Overhead Tricep Extension',sets:3,reps:'10–12',rest:'90 sec',type:'isolation',targets:'Holds one dumbbell overhead with both hands, lowers it behind the head. Loads the long head of the tricep in a fully stretched overhead position — research shows this drives significantly more long head growth than pushdowns. The long head is the biggest of the three tricep heads.'},
+      {id:'c2e6',name:'Straight Bar Tricep Pushdown',sets:3,reps:'12–15',rest:'60 sec',type:'isolation',targets:'Lateral and medial head finisher. Pairs with the overhead extension to give you complete tricep coverage — overhead for the long head, pushdown for the outer shape. Keep elbows pinned at your sides.'},
+    ]},
+    {label:'Cardio',exercises:[
+      {id:'c2e7',name:'Incline Treadmill Walk',sets:1,reps:'20 min',rest:'—',type:'cardio',targets:'Low intensity steady state cardio. Burns fat without competing with muscle recovery. 10–12% incline at 3.0–3.5 mph. Keeps you lean while building muscle.'},
+    ]},
   ]},
   {id:4,title:'BACK DAY 2',subtitle:'Day 5 — Back / Biceps (Thickness)',sections:[
-    {label:'Back',exercises:[{id:'b2e1',name:'Heavy Single-Arm DB Row',sets:4,reps:'8–10',rest:'2–3 min',type:'compound_moderate'},{id:'b2e2',name:'Seated Cable Row (wide/V-bar)',sets:4,reps:'10–12',rest:'2 min',type:'compound_moderate'},{id:'b2e3',name:'Lat Pulldown (underhand/neutral)',sets:3,reps:'10–12',rest:'90 sec',type:'compound_moderate'},{id:'b2e4',name:'Face Pulls',sets:3,reps:'15–20',rest:'60 sec',type:'isolation'}]},
-    {label:'Biceps',exercises:[{id:'b2e5',name:'Dumbbell Curl',sets:3,reps:'8–12',rest:'60 sec',type:'isolation'},{id:'b2e6',name:'Hammer Curl',sets:3,reps:'12–15',rest:'60 sec',type:'isolation'}]},
-    {label:'Cardio',exercises:[{id:'b2e7',name:'Incline Treadmill Walk',sets:1,reps:'20 min',rest:'—',type:'cardio'}]},
+    {label:'Back',exercises:[
+      {id:'b2e1',name:'Single-Arm Dumbbell Row',sets:4,reps:'8–10',rest:'2–3 min',type:'compound_moderate',targets:'Leads Day 5 as the primary thickness builder. Go heavier than Day 2 — this is your strength anchor for back. Full stretch at the bottom, explosive pull, squeeze at the top. One of the highest EMG back exercises at 91% activation.'},
+      {id:'b2e2',name:'Seated Cable Row (wide/V-bar)',sets:4,reps:'10–12',rest:'2 min',type:'compound_moderate',targets:'Mid-back and rhomboid focus. Different grip than Day 2 changes the emphasis slightly — V-bar brings elbows in for more lat, wide grip flares elbows for more upper back. Alternate between sessions.'},
+      {id:'b2e3',name:'Lat Pulldown (underhand/neutral)',sets:3,reps:'10–12',rest:'90 sec',type:'compound_moderate',targets:'Underhand grip shifts more activation to the lower lat and bicep compared to the overhand MAG grip on Day 2. Research shows underhand ranked higher for lat activation in some studies. Gives you a different lat stimulus than Day 2.'},
+      {id:'b2e4',name:'Face Pulls',sets:3,reps:'15–20',rest:'60 sec',type:'isolation',targets:'Rear delt and external rotator work. Critical for shoulder health with all the pressing you do. Pull to your face with elbows high and wide. This is non-negotiable — skip it and your shoulders will eventually pay for it.'},
+    ]},
+    {label:'Biceps',exercises:[
+      {id:'b2e5',name:'Cable Curl',sets:3,reps:'10–12',rest:'60 sec',type:'isolation',targets:'Cable keeps constant tension through the entire range of motion — unlike dumbbells which have zero tension at the bottom. Hits the bicep differently than both incline curl and preacher curl. Completes full bicep coverage across the week.'},
+      {id:'b2e6',name:'Hammer Curl',sets:3,reps:'12–15',rest:'60 sec',type:'isolation',targets:'Targets the brachialis — a muscle underneath the bicep that pushes it up when developed, increasing peak height and arm thickness. No other curl in your plan hits this. Hold dumbbells neutral (palms facing each other) throughout.'},
+    ]},
+    {label:'Cardio',exercises:[
+      {id:'b2e7',name:'Incline Treadmill Walk',sets:1,reps:'20 min',rest:'—',type:'cardio',targets:'Low intensity steady state cardio. Burns fat without competing with muscle recovery. 10–12% incline at 3.0–3.5 mph. Keeps you lean while building muscle.'},
+    ]},
   ]},
 ];
 
@@ -564,7 +617,7 @@ function renderEx(){
   document.getElementById('exScreenTitle').textContent=ex.name;
   const c=document.getElementById('exScreenContent');c.innerHTML='';
   const dc=document.createElement('div');dc.className='ex-detail-card';
-  dc.innerHTML=`<div class="ex-detail-stats"><div class="ex-detail-stat"><div class="ex-detail-val">${ex.sets}</div><div class="ex-detail-lbl">Sets</div></div><div class="ex-detail-stat"><div class="ex-detail-val">${ex.reps}</div><div class="ex-detail-lbl">Reps</div></div><div class="ex-detail-stat"><div class="ex-detail-val">${ex.rest}</div><div class="ex-detail-lbl">Rest</div></div></div><div class="ex-detail-type">${TYPE_LBL[ex.type]} · ${MULT[ex.type]||0.6}x LP multiplier</div>`;
+  dc.innerHTML=`<div class="ex-detail-stats"><div class="ex-detail-stat"><div class="ex-detail-val">${ex.sets}</div><div class="ex-detail-lbl">Sets</div></div><div class="ex-detail-stat"><div class="ex-detail-val">${ex.reps}</div><div class="ex-detail-lbl">Reps</div></div><div class="ex-detail-stat"><div class="ex-detail-val">${ex.rest}</div><div class="ex-detail-lbl">Rest</div></div></div><div class="ex-detail-type">${TYPE_LBL[ex.type]} · ${MULT[ex.type]||0.6}x LP multiplier</div>${ex.targets?`<div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border);font-size:12px;color:var(--muted);line-height:1.7;">${ex.targets}</div>`:''}`;
   c.appendChild(dc);
   if(pr){const pc=document.createElement('div');pc.className='ex-pr-card';const prLine=ex.type==='cardio'?`${pr.mins} minutes`:`${pr.weight}lb × ${pr.reps} reps`;pc.innerHTML=`<div class="ex-pr-title">PERSONAL RECORD</div><div class="ex-pr-val">${prLine}</div><div class="ex-pr-sub">${pr.lp} LP earned</div>`;c.appendChild(pc);}
   if(!isDone){
