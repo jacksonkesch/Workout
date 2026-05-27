@@ -399,6 +399,10 @@ const DEFAULT_DAYS=[
       {id:'b1e4',name:'Incline Dumbbell Curl',sets:3,reps:'10–15',rest:'60 sec',type:'isolation',targets:'Loads the long head of the bicep in a fully stretched position at the bottom — research confirms stretched-position training drives more hypertrophy. Best exercise for building bicep peak.'},
       {id:'b1e5',name:'Preacher Curl Machine',sets:3,reps:'10–12',rest:'60 sec',type:'isolation',targets:'Locks out momentum completely and isolates the short head. The pad prevents cheating and forces the bicep to do all the work. Complements the incline curl by hitting a different region.'},
     ]},
+    {label:'Forearms',exercises:[
+      {id:'b1e7',name:'Wrist Curl (Dumbbell)',sets:2,reps:'15–20',rest:'45 sec',type:'isolation',targets:'Hits the wrist flexors on the palm side of the forearm. Sit on a bench, rest forearms on thighs palms up, let the dumbbell roll to your fingertips then curl your wrist up. Go slow on the way down — time under tension is what builds forearm size. High reps because forearms are slow-twitch dominant.'},
+      {id:'b1e8',name:'Reverse Curl (Dumbbell)',sets:2,reps:'15–20',rest:'45 sec',type:'isolation',targets:'EMG confirms reverse curls are one of the best exercises for forearm growth. Palms face down — this shifts activation to the brachioradialis, the thick muscle on the thumb side that gives forearms the vascular meaty look. Also hits the wrist extensors on the back of the forearm. Keep elbows locked at your sides.'},
+    ]},
     {label:'Cardio',exercises:[
       {id:'b1e6',name:'Incline Treadmill Walk',sets:1,reps:'20–30 min',rest:'—',type:'cardio',targets:'Low intensity steady state cardio. Burns fat without competing with muscle recovery. 10–12% incline at 3.0–3.5 mph. Keeps you lean while building muscle.'},
     ]},
@@ -449,6 +453,10 @@ const DEFAULT_DAYS=[
       {id:'b2e5',name:'Cable Curl',sets:3,reps:'10–12',rest:'60 sec',type:'isolation',targets:'Cable keeps constant tension through the entire range of motion — unlike dumbbells which have zero tension at the bottom. Hits the bicep differently than both incline curl and preacher curl. Completes full bicep coverage across the week.'},
       {id:'b2e6',name:'Hammer Curl',sets:3,reps:'12–15',rest:'60 sec',type:'isolation',targets:'Targets the brachialis — a muscle underneath the bicep that pushes it up when developed, increasing peak height and arm thickness. No other curl in your plan hits this. Hold dumbbells neutral (palms facing each other) throughout.'},
     ]},
+    {label:'Forearms',exercises:[
+      {id:'b2e8',name:'Wrist Curl (Dumbbell)',sets:2,reps:'15–20',rest:'45 sec',type:'isolation',targets:'Second weekly flexor session. Forearms respond to frequency — hitting them twice a week is what drives consistent growth. Same form: palms up, forearms on thighs, full roll to fingertips then curl up. Slow eccentric on the way down.'},
+      {id:'b2e9',name:'Reverse Curl (Dumbbell)',sets:2,reps:'15–20',rest:'45 sec',type:'isolation',targets:'Second weekly brachioradialis and extensor session. Palms down throughout. This is the exercise most responsible for visible forearm size and vascularity — the brachioradialis is the muscle you actually see when someone has impressive forearms. Keep reps controlled and full range of motion.'},
+    ]},
     {label:'Cardio',exercises:[
       {id:'b2e7',name:'Incline Treadmill Walk',sets:1,reps:'20 min',rest:'—',type:'cardio',targets:'Low intensity steady state cardio. Burns fat without competing with muscle recovery. 10–12% incline at 3.0–3.5 mph. Keeps you lean while building muscle.'},
     ]},
@@ -458,7 +466,8 @@ const DEFAULT_DAYS=[
 const SK='wk_v6';
 function defaultState(){return{days:JSON.parse(JSON.stringify(DEFAULT_DAYS)),weekChecked:{},weekLp:{},totalLp:0,rankIdx:START_RANK,prs:{},weightLog:[],lastWorkout:null,streak:0,appStartDate:new Date().toISOString().split('T')[0],weekAnimPlayed:{}};}
 let S=defaultState();
-try{const raw=localStorage.getItem(SK);if(raw){const p=JSON.parse(raw);S=Object.assign(defaultState(),p);if(!S.days||!S.days.length)S.days=JSON.parse(JSON.stringify(DEFAULT_DAYS));if(!S.weekChecked)S.weekChecked={};if(!S.weekLp)S.weekLp={};if(!S.weekAnimPlayed)S.weekAnimPlayed={};}}catch(e){}
+try{const raw=localStorage.getItem(SK);if(raw){const p=JSON.parse(raw);S=Object.assign(defaultState(),p);if(!S.days||!S.days.length)S.days=JSON.parse(JSON.stringify(DEFAULT_DAYS));if(!S.weekChecked)S.weekChecked={};if(!S.weekLp)S.weekLp={};if(!S.weekAnimPlayed)S.weekAnimPlayed={};// Preserve saved appStartDate so week counter doesn't reset
+if(p.appStartDate)S.appStartDate=p.appStartDate;}}catch(e){}
 function save(){try{localStorage.setItem(SK,JSON.stringify(S));}catch(e){}}
 
 let viewingWeek=1;
